@@ -53,12 +53,15 @@ class SubjectPage extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             title: Text(subject.name),
-            bottom: const TabBar(
+            bottom: TabBar(
+              isScrollable: true,
+              tabAlignment: TabAlignment.center,
+              indicatorSize: TabBarIndicatorSize.label,
               tabs: [
-                Tab(text: 'Czat'),
-                Tab(text: 'Materiały'),
-                Tab(text: 'Fiszki'),
-                Tab(text: 'Quiz'),
+                const Tab(text: 'Czat'),
+                const Tab(text: 'Materiały'),
+                const Tab(text: 'Fiszki'),
+                const Tab(text: 'Quiz'),
               ],
             ),
           ),

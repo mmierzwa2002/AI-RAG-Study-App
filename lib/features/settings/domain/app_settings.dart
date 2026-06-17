@@ -10,7 +10,7 @@ class AppSettings extends Equatable {
     this.geminiApiKey = '',
     this.anthropicModel = 'claude-3-5-sonnet-20240620',
     this.openaiModel = 'gpt-4o-mini',
-    this.geminiModel = 'gemini-1.5-flash',
+    this.geminiModel = 'gemini-2.5-flash',
     this.openaiBaseUrl = 'https://api.openai.com/v1',
   });
 
