@@ -20,6 +20,8 @@ class SettingsRepositoryImpl implements SettingsRepository {
   static const _kOpenaiModel = 'settings_openai_model';
   static const _kGeminiModel = 'settings_gemini_model';
   static const _kOpenaiBaseUrl = 'settings_openai_base_url';
+  static const _kGeminiEmbeddingModel = 'settings_gemini_embedding_model';
+  static const _kOpenaiEmbeddingModel = 'settings_openai_embedding_model';
 
   @override
   Future<AppSettings> load() async {
@@ -41,6 +43,10 @@ class SettingsRepositoryImpl implements SettingsRepository {
       geminiModel: _prefs.getString(_kGeminiModel) ?? defaults.geminiModel,
       openaiBaseUrl:
           _prefs.getString(_kOpenaiBaseUrl) ?? defaults.openaiBaseUrl,
+      geminiEmbeddingModel: _prefs.getString(_kGeminiEmbeddingModel) ??
+          defaults.geminiEmbeddingModel,
+      openaiEmbeddingModel: _prefs.getString(_kOpenaiEmbeddingModel) ??
+          defaults.openaiEmbeddingModel,
     );
   }
 
@@ -54,5 +60,9 @@ class SettingsRepositoryImpl implements SettingsRepository {
     await _prefs.setString(_kOpenaiModel, settings.openaiModel);
     await _prefs.setString(_kGeminiModel, settings.geminiModel);
     await _prefs.setString(_kOpenaiBaseUrl, settings.openaiBaseUrl);
+    await _prefs.setString(
+        _kGeminiEmbeddingModel, settings.geminiEmbeddingModel);
+    await _prefs.setString(
+        _kOpenaiEmbeddingModel, settings.openaiEmbeddingModel);
   }
 }

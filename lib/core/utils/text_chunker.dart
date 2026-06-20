@@ -1,5 +1,5 @@
 /// Dzieli wyekstrahowany tekst materiału na zachodzące na siebie fragmenty
-/// ("chunki") — to pierwsza połowa uproszczonego RAG-a.
+/// ("chunki"), czyli pierwszy etap RAG-a przed policzeniem embeddingów.
 class TextChunker {
   const TextChunker._();
 

@@ -20,6 +20,8 @@ class _SettingsPageState extends State<SettingsPage> {
   late final TextEditingController _openaiBaseUrl;
   late final TextEditingController _geminiKey;
   late final TextEditingController _geminiModel;
+  late final TextEditingController _geminiEmbeddingModel;
+  late final TextEditingController _openaiEmbeddingModel;
   bool _showKeys = false;
 
   @override
@@ -34,6 +36,10 @@ class _SettingsPageState extends State<SettingsPage> {
     _openaiBaseUrl = TextEditingController(text: s.openaiBaseUrl);
     _geminiKey = TextEditingController(text: s.geminiApiKey);
     _geminiModel = TextEditingController(text: s.geminiModel);
+    _geminiEmbeddingModel =
+        TextEditingController(text: s.geminiEmbeddingModel);
+    _openaiEmbeddingModel =
+        TextEditingController(text: s.openaiEmbeddingModel);
   }
 
   @override
@@ -45,6 +51,8 @@ class _SettingsPageState extends State<SettingsPage> {
     _openaiBaseUrl.dispose();
     _geminiKey.dispose();
     _geminiModel.dispose();
+    _geminiEmbeddingModel.dispose();
+    _openaiEmbeddingModel.dispose();
     super.dispose();
   }
 
@@ -67,6 +75,12 @@ class _SettingsPageState extends State<SettingsPage> {
       openaiBaseUrl: _openaiBaseUrl.text.trim().isEmpty
           ? defaults.openaiBaseUrl
           : _openaiBaseUrl.text.trim(),
+      geminiEmbeddingModel: _geminiEmbeddingModel.text.trim().isEmpty
+          ? defaults.geminiEmbeddingModel
+          : _geminiEmbeddingModel.text.trim(),
+      openaiEmbeddingModel: _openaiEmbeddingModel.text.trim().isEmpty
+          ? defaults.openaiEmbeddingModel
+          : _openaiEmbeddingModel.text.trim(),
     );
     context.read<SettingsCubit>().save(settings);
     ScaffoldMessenger.of(context).showSnackBar(
@@ -129,6 +143,15 @@ class _SettingsPageState extends State<SettingsPage> {
                 border: OutlineInputBorder(),
               ),
             ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _geminiEmbeddingModel,
+              decoration: const InputDecoration(
+                labelText: 'Model embeddingów (baza wektorowa)',
+                helperText: 'Domyślnie text-embedding-004',
+                border: OutlineInputBorder(),
+              ),
+            ),
           ] else if (_provider == AiProvider.anthropic) ...[
             Text('Anthropic Claude (Płatne)',
                 style: Theme.of(context).textTheme.titleMedium),
@@ -150,6 +173,13 @@ class _SettingsPageState extends State<SettingsPage> {
                 labelText: 'Model Anthropic',
                 border: OutlineInputBorder(),
               ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Anthropic nie udostępnia API embeddingów, więc dla tego '
+              'dostawcy wyszukiwanie w materiałach działa po słowach '
+              'kluczowych (TF-IDF), bez bazy wektorowej.',
+              style: Theme.of(context).textTheme.bodySmall,
             ),
           ] else if (_provider == AiProvider.openai) ...[
             Text('OpenAI lub inne (Groq, OpenRouter, Ollama)',
@@ -177,6 +207,15 @@ class _SettingsPageState extends State<SettingsPage> {
               controller: _openaiModel,
               decoration: const InputDecoration(
                 labelText: 'Model',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _openaiEmbeddingModel,
+              decoration: const InputDecoration(
+                labelText: 'Model embeddingów (baza wektorowa)',
+                helperText: 'Dla Ollamy: nomic-embed-text',
                 border: OutlineInputBorder(),
               ),
             ),

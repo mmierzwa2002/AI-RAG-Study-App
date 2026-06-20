@@ -104,14 +104,34 @@ class MaterialRepositoryImpl implements MaterialRepository {
       createdAt: DateTime.now(),
     );
 
+    // Baza wektorowa: dla każdego fragmentu liczymy embedding, żeby później
+    // wyszukiwać po podobieństwie znaczeniowym (cosine similarity). Gdy
+    // dostawca nie ma API embeddingów (Anthropic) albo zapytanie padnie,
+    // zapisujemy fragmenty bez wektora i wyszukiwanie korzysta z TF-IDF.
+    var vectors = const <List<double>>[];
+    try {
+      final embedder = await _aiFactory.createEmbedding();
+      if (embedder != null && chunks.isNotEmpty) {
+        vectors = await embedder.embed(chunks);
+      }
+    } catch (_) {
+      vectors = const [];
+    }
+
     final materials = await _storage.readList(_materialsKey(subjectId));
     materials.add(material.toJson());
     await _storage.writeList(_materialsKey(subjectId), materials);
 
     final chunkList = await _storage.readList(_chunksKey(subjectId));
-    for (final chunk in chunks) {
+    for (var i = 0; i < chunks.length; i++) {
+      final embedding = i < vectors.length ? vectors[i] : const <double>[];
       chunkList.add(
-        ChunkDoc(materialId: material.id, source: name, text: chunk).toJson(),
+        ChunkDoc(
+          materialId: material.id,
+          source: name,
+          text: chunks[i],
+          embedding: embedding,
+        ).toJson(),
       );
     }
     await _storage.writeList(_chunksKey(subjectId), chunkList);

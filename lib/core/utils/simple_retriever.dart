@@ -6,12 +6,17 @@ class ChunkDoc {
     required this.materialId,
     required this.source,
     required this.text,
+    this.embedding = const [],
   });
 
   factory ChunkDoc.fromJson(Map<String, dynamic> json) => ChunkDoc(
         materialId: json['materialId'] as String? ?? '',
         source: json['source'] as String? ?? '',
         text: json['text'] as String? ?? '',
+        embedding: (json['embedding'] as List?)
+                ?.map((e) => (e as num).toDouble())
+                .toList() ??
+            const [],
       );
 
   final String materialId;
@@ -20,10 +25,19 @@ class ChunkDoc {
   final String source;
   final String text;
 
+  /// Wektor (embedding) tego fragmentu, czyli jego pozycja w przestrzeni
+  /// znaczeniowej. To jest "baza wektorowa": każdy fragment ma swój wektor,
+  /// po którym szukamy podobieństwa do pytania (cosine similarity).
+  /// Pusta lista oznacza fragment bez wektora (np. dodany przed włączeniem
+  /// embeddingów albo dostawca bez API embeddingów). Wtedy działa fallback
+  /// na TF-IDF w [SimpleRetriever].
+  final List<double> embedding;
+
   Map<String, dynamic> toJson() => {
         'materialId': materialId,
         'source': source,
         'text': text,
+        if (embedding.isNotEmpty) 'embedding': embedding,
       };
 }
 
@@ -55,7 +69,7 @@ class SimpleRetriever {
     final queryTerms = _tokens(query).toSet();
     final docTokens = chunks.map((c) => _tokens(c.text)).toList();
 
-    // Document frequency — w ilu fragmentach występuje dany term.
+    // Document frequency: w ilu fragmentach występuje dany term.
     final df = <String, int>{};
     for (final tokens in docTokens) {
       for (final term in tokens.toSet()) {
@@ -95,7 +109,7 @@ class SimpleRetriever {
     return result;
   }
 
-  /// Losowa, ale równomiernie pokrywająca materiał próbka fragmentów —
+  /// Losowa, ale równomiernie pokrywająca materiał próbka fragmentów,
   /// używana do generowania fiszek, quizów i pytań w trybie odpytywania.
   static List<ChunkDoc> sample({
     required List<ChunkDoc> chunks,

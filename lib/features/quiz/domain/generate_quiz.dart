@@ -37,14 +37,15 @@ class GenerateQuiz {
           'WYŁĄCZNIE poprawny JSON, bez żadnego dodatkowego tekstu i bez '
           'bloków kodu.',
       prompt: 'Na podstawie poniższych materiałów z przedmiotu '
-          '„${subject.name}” ułóż $count pytań jednokrotnego wyboru po '
-          'polsku.\n'
+          '„${subject.name}” ułóż DOKŁADNIE $count pytań jednokrotnego '
+          'wyboru po polsku.\n'
           'Każde pytanie ma dokładnie 4 odpowiedzi, z których dokładnie '
           'jedna jest poprawna. Pole "correctIndex" to indeks poprawnej '
           'odpowiedzi (0–3), a "explanation" to krótkie wyjaśnienie.\n'
-          'Format odpowiedzi (tylko JSON):\n'
-          '[{"question": "...", "options": ["...", "...", "...", "..."], '
-          '"correctIndex": 0, "explanation": "..."}]\n\n'
+          'Zwróć obiekt JSON z polem "pytania" będącym tablicą $count '
+          'elementów:\n'
+          '{"pytania": [{"question": "...", "options": ["...", "...", "...", '
+          '"..."], "correctIndex": 0, "explanation": "..."}]}\n\n'
           'MATERIAŁY:\n$materialText',
     );
 

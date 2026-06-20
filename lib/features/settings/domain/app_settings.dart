@@ -12,6 +12,8 @@ class AppSettings extends Equatable {
     this.openaiModel = 'gpt-4o-mini',
     this.geminiModel = 'gemini-2.5-flash',
     this.openaiBaseUrl = 'https://api.openai.com/v1',
+    this.geminiEmbeddingModel = 'text-embedding-004',
+    this.openaiEmbeddingModel = 'text-embedding-3-small',
   });
 
   final AiProvider provider;
@@ -24,6 +26,13 @@ class AppSettings extends Equatable {
 
   /// Adres bazowy API kompatybilnego z OpenAI.
   final String openaiBaseUrl;
+
+  /// Model embeddingów (baza wektorowa) dla Gemini.
+  final String geminiEmbeddingModel;
+
+  /// Model embeddingów dla OpenAI i kompatybilnych.
+  /// Dla lokalnej Ollamy wpisz "nomic-embed-text".
+  final String openaiEmbeddingModel;
 
   bool get hasKeyForProvider => switch (provider) {
         AiProvider.anthropic => anthropicApiKey.trim().isNotEmpty,
@@ -40,6 +49,8 @@ class AppSettings extends Equatable {
     String? openaiModel,
     String? geminiModel,
     String? openaiBaseUrl,
+    String? geminiEmbeddingModel,
+    String? openaiEmbeddingModel,
   }) =>
       AppSettings(
         provider: provider ?? this.provider,
@@ -50,6 +61,8 @@ class AppSettings extends Equatable {
         openaiModel: openaiModel ?? this.openaiModel,
         geminiModel: geminiModel ?? this.geminiModel,
         openaiBaseUrl: openaiBaseUrl ?? this.openaiBaseUrl,
+        geminiEmbeddingModel: geminiEmbeddingModel ?? this.geminiEmbeddingModel,
+        openaiEmbeddingModel: openaiEmbeddingModel ?? this.openaiEmbeddingModel,
       );
 
   @override
@@ -62,5 +75,7 @@ class AppSettings extends Equatable {
         openaiModel,
         geminiModel,
         openaiBaseUrl,
+        geminiEmbeddingModel,
+        openaiEmbeddingModel,
       ];
 }

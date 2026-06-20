@@ -44,11 +44,12 @@ class GenerateFlashcards {
       system: 'Tworzysz fiszki do nauki dla studenta. Zwracasz WYŁĄCZNIE '
           'poprawny JSON, bez żadnego dodatkowego tekstu i bez bloków kodu.',
       prompt: 'Na podstawie poniższych materiałów z przedmiotu '
-          '„${subject.name}” przygotuj $count fiszek po polsku.\n'
+          '„${subject.name}” przygotuj DOKŁADNIE $count fiszek po polsku.\n'
           'Przód fiszki to krótkie pytanie lub pojęcie, tył to zwięzła '
           'odpowiedź lub definicja (maksymalnie 2–3 zdania).\n'
-          'Format odpowiedzi (tylko JSON):\n'
-          '[{"front": "...", "back": "..."}]\n\n'
+          'Zwróć obiekt JSON z polem "fiszki" będącym tablicą $count '
+          'elementów:\n'
+          '{"fiszki": [{"front": "...", "back": "..."}]}\n\n'
           'MATERIAŁY:\n$materialText',
     );
 

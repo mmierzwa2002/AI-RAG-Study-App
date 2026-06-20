@@ -61,3 +61,4 @@ secrets.dart
 lib/core/config/secrets.dart
 lib/config/secrets.dart
 api_keys.dart
+.claude

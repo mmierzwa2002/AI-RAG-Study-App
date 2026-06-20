@@ -98,6 +98,10 @@ class OpenAiClient implements AiClient {
   }) async {
     final json = await _post({
       'model': model,
+      // Tryb JSON: dostawcy zgodni z OpenAI (w tym Ollama) gramatycznie
+      // wymuszają wtedy poprawny składniowo JSON. Mocno pomaga małym modelom,
+      // które inaczej doklejają tekst albo psują składnię.
+      'response_format': {'type': 'json_object'},
       'messages': [
         {'role': 'system', 'content': system},
         {'role': 'user', 'content': prompt},

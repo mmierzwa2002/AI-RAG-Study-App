@@ -5,7 +5,9 @@ import '../../features/settings/domain/settings_repository.dart';
 import '../error/app_exception.dart';
 import 'ai_client.dart';
 import 'anthropic_client.dart';
+import 'embedding_client.dart';
 import 'openai_client.dart';
+import 'openai_embedding_client.dart';
 
 /// Tworzy klienta AI zgodnie z aktualnymi ustawieniami użytkownika
 /// (dostawca, klucz API, nazwa modelu).
@@ -60,6 +62,36 @@ class AiClientFactory {
         return OpenAiClient(
           apiKey: s.geminiApiKey.trim(),
           model: s.geminiModel,
+          baseUrl: 'https://generativelanguage.googleapis.com/v1beta/openai',
+          httpClient: _http,
+        );
+    }
+  }
+
+  /// Tworzy klienta embeddingów dla aktualnego dostawcy (baza wektorowa).
+  ///
+  /// Embeddingi liczy ten sam dostawca co czat. Zwraca null dla Anthropic,
+  /// który nie ma API embeddingów: wtedy retrieval spada na TF-IDF.
+  Future<EmbeddingClient?> createEmbedding() async {
+    final s = await _settings.load();
+    switch (s.provider) {
+      case AiProvider.anthropic:
+        return null;
+      case AiProvider.openai:
+        final baseUrl = s.openaiBaseUrl.trim().isEmpty
+            ? const AppSettings().openaiBaseUrl
+            : s.openaiBaseUrl.trim();
+        return OpenAiEmbeddingClient(
+          apiKey: s.openaiApiKey.trim(),
+          model: s.openaiEmbeddingModel,
+          baseUrl: baseUrl,
+          httpClient: _http,
+        );
+      case AiProvider.gemini:
+        if (s.geminiApiKey.trim().isEmpty) return null;
+        return OpenAiEmbeddingClient(
+          apiKey: s.geminiApiKey.trim(),
+          model: s.geminiEmbeddingModel,
           baseUrl: 'https://generativelanguage.googleapis.com/v1beta/openai',
           httpClient: _http,
         );

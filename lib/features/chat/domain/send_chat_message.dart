@@ -2,6 +2,7 @@ import '../../../core/ai/ai_client.dart';
 import '../../../core/ai/ai_client_factory.dart';
 import '../../../core/error/app_exception.dart';
 import '../../../core/utils/simple_retriever.dart';
+import '../../../core/utils/vector_retriever.dart';
 import '../../materials/domain/material_repository.dart';
 import '../../subjects/domain/subject.dart';
 import 'chat_message.dart';
@@ -40,11 +41,12 @@ class SendChatMessage {
     final lastUserText =
         history.lastWhere((m) => m.isUser, orElse: () => history.last).text;
 
-    // Uproszczony RAG: w zwykłym czacie wybieramy fragmenty pasujące do
-    // pytania (TF-IDF), w trybie odpytywania — próbkę całego materiału.
+    // RAG: w zwykłym czacie wybieramy fragmenty pasujące do pytania
+    // (wyszukiwanie wektorowe, z fallbackiem na TF-IDF), a w trybie
+    // odpytywania bierzemy próbkę całego materiału.
     final selected = examMode
         ? SimpleRetriever.sample(chunks: chunks, maxChars: 7000)
-        : SimpleRetriever.topChunks(query: lastUserText, chunks: chunks);
+        : await _retrieve(lastUserText, chunks);
 
     final system = examMode
         ? _examSystemPrompt(subject.name, selected)
@@ -56,6 +58,31 @@ class SendChatMessage {
     }
 
     yield* ai.streamChat(system: system, turns: turns);
+  }
+
+  /// Wybiera fragmenty najlepiej pasujące do pytania. Najpierw próbuje
+  /// wyszukiwania wektorowego (embedding pytania + cosine similarity wobec
+  /// "bazy wektorowej"), a gdy to niedostępne (dostawca bez embeddingów,
+  /// fragmenty bez wektorów albo błąd sieci) spada na TF-IDF. Dzięki temu
+  /// czat działa zawsze, niezależnie od konfiguracji.
+  Future<List<ChunkDoc>> _retrieve(String query, List<ChunkDoc> chunks) async {
+    final hasVectors = chunks.any((c) => c.embedding.isNotEmpty);
+    if (hasVectors) {
+      try {
+        final embedder = await _aiFactory.createEmbedding();
+        if (embedder != null) {
+          final queryEmbedding = (await embedder.embed([query])).first;
+          final byVector = VectorRetriever.topChunks(
+            queryEmbedding: queryEmbedding,
+            chunks: chunks,
+          );
+          if (byVector.isNotEmpty) return byVector;
+        }
+      } catch (_) {
+        // Po cichu spadamy na TF-IDF poniżej.
+      }
+    }
+    return SimpleRetriever.topChunks(query: query, chunks: chunks);
   }
 
   /// Mapuje historię na tury API: ostatnie 16 wiadomości, zaczynając od
