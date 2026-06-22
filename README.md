@@ -17,17 +17,17 @@ Wrzuć PDF lub zdjęcie notatek, rozmawiaj z materiałem, generuj fiszki i quizy
 
 ## ✨ Funkcje
 
-| Funkcja                       | Opis                                                            |
-| ----------------------------- | --------------------------------------------------------------- |
-| 📄 **Upload PDF**             | Ekstrakcja tekstu przez `syncfusion_flutter_pdf`                |
-| 📷 **Zdjęcia notatek**        | Tekst przepisuje model AI (aparat lub galeria)                  |
-| 💬 **Czat z materiałem**      | RAG: wyszukiwanie wektorowe (embeddingi) z fallbackiem TF-IDF   |
-| ⚡ **Streaming SSE**          | Odpowiedzi modelu pojawiają się na żywo, token po tokenie       |
-| 🎓 **Tryb odpytywania**       | AI zadaje pytania, ocenia odpowiedzi i wyjaśnia błędy           |
-| 🃏 **Fiszki**                 | Generowane z materiałów, tryb nauki z odwracaniem kart          |
-| 🧠 **Quiz**                   | Pytania jednokrotnego wyboru z wyjaśnieniami                    |
-| 📂 **Historia per przedmiot** | Każdy przedmiot ma osobną bazę wiedzy i historię czatu          |
-| 🔌 **Wielu dostawców AI**     | Gemini (darmowe), Anthropic Claude, Ollama (lokalnie)           |
+| Funkcja                       | Opis                                                          |
+| ----------------------------- | ------------------------------------------------------------- |
+| 📄 **Upload PDF**             | Ekstrakcja tekstu przez `syncfusion_flutter_pdf`              |
+| 📷 **Zdjęcia notatek**        | Tekst przepisuje model AI (aparat lub galeria)                |
+| 💬 **Czat z materiałem**      | RAG: wyszukiwanie wektorowe (embeddingi) z fallbackiem TF-IDF |
+| ⚡ **Streaming SSE**          | Odpowiedzi modelu pojawiają się na żywo, token po tokenie     |
+| 🎓 **Tryb odpytywania**       | AI zadaje pytania, ocenia odpowiedzi i wyjaśnia błędy         |
+| 🃏 **Fiszki**                 | Generowane z materiałów, tryb nauki z odwracaniem kart        |
+| 🧠 **Quiz**                   | Pytania jednokrotnego wyboru z wyjaśnieniami                  |
+| 📂 **Historia per przedmiot** | Każdy przedmiot ma osobną bazę wiedzy i historię czatu        |
+| 🔌 **Wielu dostawców AI**     | Gemini (darmowe), Anthropic Claude, Ollama (lokalnie)         |
 
 ---
 
